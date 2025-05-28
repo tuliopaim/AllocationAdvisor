@@ -12,9 +12,9 @@ const AllocationInput: React.FC<AllocationInputProps> = ({
     value,
     onChange
 }) => (
-    <div className="bg-white p-5 rounded-lg border border-slate-200 shadow-sm hover:shadow-md transition-all">
+    <div className="bg-white/50 p-5 rounded-lg border border-slate-100 shadow-sm hover:shadow-md transition-all">
         <div className="flex justify-between items-center mb-2">
-            <label className="block text-sm font-semibold text-slate-700">
+            <label className="block text-sm font-medium text-slate-600">
                 {category}
             </label>
         </div>
@@ -27,9 +27,9 @@ const AllocationInput: React.FC<AllocationInputProps> = ({
                     value={value || ''}
                     onChange={(e) => onChange(category, e.target.value === '' ? 0 : Number(e.target.value))}
                     className="block w-full p-3 border rounded-lg
-                        focus:ring-2 focus:ring-blue-500 focus:border-blue-500 
+                        focus:ring-2 focus:ring-slate-300 focus:border-slate-300 
                         transition-colors
-                        hover:border-blue-300
+                        hover:border-slate-300
                         [appearance:textfield]
                         [&::-webkit-outer-spin-button]:appearance-none
                         [&::-webkit-inner-spin-button]:appearance-none
@@ -71,11 +71,11 @@ const TargetAllocations: React.FC<TargetAllocationsProps> = ({
     return (
         <div className="mt-8 space-y-6">
             <div className="flex justify-between items-center">
-                <h3 className="text-xl font-semibold">Metas por Categoria</h3>
+                <h3 className="text-xl font-semibold text-slate-800">Metas por Categoria</h3>
                 <div className="flex items-center space-x-3">
-                    <span className={`text-sm font-semibold px-3 py-1 rounded-full ${totalAllocation === 100
-                        ? 'text-green-700 bg-green-100'
-                        : 'text-red-700 bg-red-100'
+                    <span className={`text-sm font-medium px-3 py-1 rounded-full ${totalAllocation === 100
+                        ? 'text-emerald-700 bg-emerald-50/50'
+                        : 'text-amber-700 bg-amber-50/50'
                         }`}>
                         {totalAllocation}%
                     </span>
@@ -94,8 +94,8 @@ const TargetAllocations: React.FC<TargetAllocationsProps> = ({
             </div>
 
             {totalAllocation !== 100 && (
-                <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
-                    <p className="text-sm text-red-600">
+                <div className="p-4 bg-amber-50/50 border border-amber-100 rounded-lg">
+                    <p className="text-sm text-amber-700">
                         A soma das alocações deve ser igual a 100%
                     </p>
                 </div>

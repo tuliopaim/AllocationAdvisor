@@ -19,29 +19,33 @@ const PortfolioSummaryCard: React.FC<PortfolioSummaryCardProps> = ({
     const isPositive = investmentAmount > 0;
 
     return (
-        <div className="p-6 bg-gradient-to-br from-slate-50 to-white rounded-lg border-2 border-slate-200 shadow-sm hover:shadow-md transition-all">
-            <div className="flex justify-between items-start">
+        <div className="p-6 bg-gradient-to-br from-slate-50 to-white rounded-lg border border-slate-200 shadow-sm hover:shadow-md transition-all">
+            <div className="flex flex-col space-y-4">
+                <div className="flex justify-between items-center">
+                    <h4 className="text-lg font-semibold text-slate-800">Total do Portfólio</h4>
+                    <div className="flex items-center space-x-2">
+                        <span className={`text-sm font-medium px-3 py-1 rounded-full ${isPositive ? 'text-emerald-700 bg-emerald-50/50' : 'text-slate-600 bg-slate-50/50'}`}>
+                            +{percentageChange}%
+                        </span>
+                        <span className={`text-sm font-medium px-3 py-1 rounded-full ${isPositive ? 'text-emerald-700 bg-emerald-50/50' : 'text-slate-600 bg-slate-50/50'}`}>
+                            +{formatMoney(investmentAmount)}
+                        </span>
+                    </div>
+                </div>
+
                 <div className="grid grid-cols-2 gap-6">
-                    <div>
-                        <div className="text-slate-600 mb-1.5 font-medium">Atual</div>
-                        <div className="text-lg font-bold text-slate-900">
+                    <div className="p-4 bg-white rounded-lg border border-slate-100">
+                        <div className="text-slate-500 mb-1.5 font-medium">Atual</div>
+                        <div className="text-xl font-bold text-slate-900">
                             {formatMoney(currentTotal)}
                         </div>
                     </div>
-                    <div>
-                        <div className="text-slate-600 mb-1.5 font-medium">Após aporte</div>
-                        <div className="text-lg font-bold text-slate-900">
+                    <div className="p-4 bg-white rounded-lg border border-slate-100">
+                        <div className="text-slate-500 mb-1.5 font-medium">Após aporte</div>
+                        <div className="text-xl font-bold text-slate-900">
                             {formatMoney(afterTotal)}
                         </div>
                     </div>
-                </div>
-                <div className="flex flex-col items-end space-y-1.5">
-                    <span className={`text-sm font-semibold px-3 py-1 rounded-full ${isPositive ? 'text-green-700 bg-green-100' : 'text-slate-600 bg-slate-100'}`}>
-                        +{percentageChange}%
-                    </span>
-                    <span className={`text-sm font-semibold px-3 py-1 rounded-full ${isPositive ? 'text-green-700 bg-green-100' : 'text-slate-600 bg-slate-100'}`}>
-                        +{formatMoney(investmentAmount)}
-                    </span>
                 </div>
             </div>
         </div>
@@ -61,14 +65,14 @@ interface CategoryCardProps {
 
 const CategoryCard: React.FC<CategoryCardProps> = ({ category, currentTotal, newTotal, currentAllocation, newAllocation, difference, valueDifference, formatMoney }) => {
     const getDifferenceColor = (diff: number) =>
-        diff > 0 ? 'text-green-700 bg-green-50' :
-            diff < 0 ? 'text-red-700 bg-red-50' :
-                'text-slate-600 bg-slate-50';
+        diff > 0 ? 'text-emerald-700 bg-emerald-50/50' :
+            diff < 0 ? 'text-amber-700 bg-amber-50/50' :
+                'text-slate-600 bg-slate-50/50';
 
     return (
-        <div className="flex flex-col p-4 hover:bg-slate-50 rounded-lg border border-slate-100 transition-colors">
+        <div className="flex flex-col p-4 hover:bg-slate-50/50 rounded-lg border border-slate-100 transition-colors">
             <div className="flex justify-between items-start mb-2">
-                <span className="font-semibold text-slate-900">{category}</span>
+                <span className="font-medium text-slate-800">{category}</span>
                 <div className="flex flex-col items-end">
                     <span className={`text-sm px-2 py-0.5 rounded-full ${getDifferenceColor(difference)}`}>
                         {difference > 0 ? '+' : ''}{difference.toFixed(2)}%
@@ -83,14 +87,14 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category, currentTotal, new
             <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
                     <div className="text-slate-500 mb-1">Atual</div>
-                    <div className="font-medium">
+                    <div className="font-medium text-slate-700">
                         {formatMoney(currentTotal)}
                         <span className="text-slate-400 ml-1">({currentAllocation.toFixed(1)}%)</span>
                     </div>
                 </div>
                 <div>
                     <div className="text-slate-500 mb-1">Após aporte</div>
-                    <div className="font-medium">
+                    <div className="font-medium text-slate-700">
                         {formatMoney(newTotal)}
                         <span className="text-slate-400 ml-1">({newAllocation.toFixed(1)}%)</span>
                     </div>
@@ -108,50 +112,60 @@ interface RecommendationCardProps {
 
 const RecommendationCard: React.FC<RecommendationCardProps> = ({ recommendation, formatMoney, formatShares }) => {
     const categoryColors = {
-        'ETF': 'bg-blue-50 border-blue-200 hover:bg-blue-100',
-        'Ações BR': 'bg-green-50 border-green-200 hover:bg-green-100',
-        'FII': 'bg-yellow-50 border-yellow-200 hover:bg-yellow-100',
-        'Renda Fixa BRL': 'bg-purple-50 border-purple-200 hover:bg-purple-100',
-        'Cripto': 'bg-red-50 border-red-200 hover:bg-red-100'
+        'ETF': 'bg-slate-50/50 border-slate-100 hover:bg-slate-100/50',
+        'Ações BR': 'bg-slate-50/50 border-slate-100 hover:bg-slate-100/50',
+        'FII': 'bg-slate-50/50 border-slate-100 hover:bg-slate-100/50',
+        'Renda Fixa BRL': 'bg-slate-50/50 border-slate-100 hover:bg-slate-100/50',
+        'Cripto': 'bg-slate-50/50 border-slate-100 hover:bg-slate-100/50'
     };
 
-    const colorClass = categoryColors[recommendation.category as keyof typeof categoryColors] || 'bg-gray-50 border-gray-200 hover:bg-gray-100';
+    const colorClass = categoryColors[recommendation.category as keyof typeof categoryColors] || 'bg-slate-50/50 border-slate-100/50 hover:bg-slate-100/50';
+
+    const categoryBadgeColors = {
+        'ETF': 'bg-blue-50/50 text-blue-700/90',
+        'Ações BR': 'bg-emerald-50/50 text-emerald-700/90',
+        'FII': 'bg-amber-50/50 text-amber-700/90',
+        'Renda Fixa BRL': 'bg-violet-50/50 text-violet-700/90',
+        'Cripto': 'bg-rose-50/50 text-rose-700/90'
+    };
+
+    const badgeColorClass = categoryBadgeColors[recommendation.category as keyof typeof categoryBadgeColors] || 'bg-slate-50/50 text-slate-700/90';
 
     return (
         <div className={`p-4 rounded-lg border ${colorClass} transition-colors duration-200`}>
             <div className="flex flex-col space-y-3">
                 <div className="flex justify-between items-start">
-                    <span className="font-semibold text-lg">{recommendation.asset}</span>
-                    <span className="text-sm font-medium px-2 py-1 rounded bg-white/50">
+                    <span className="font-medium text-slate-800">{recommendation.asset}</span>
+                    <span className={`text-sm font-medium px-2 py-1 rounded-full ${badgeColorClass}`}>
                         {recommendation.category}
                     </span>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4 text-sm">
                     <div>
-                        <span className="text-gray-600">Nota:</span>{' '}
-                        <span className="font-medium">{recommendation.score}</span>
+                        <span className="text-slate-500">Nota:</span>{' '}
+                        <span className="font-medium text-slate-700">{recommendation.score}</span>
                     </div>
                     <div>
-                        <span className="text-gray-600">Alocação:</span>{' '}
-                        <span className="font-medium">
+                        <span className="text-slate-500">Alocação:</span>{' '}
+                        <span className="font-medium text-slate-700">
                             {recommendation.currentAllocation.toFixed(1)}% → {recommendation.targetAllocation.toFixed(1)}%
                         </span>
                     </div>
                 </div>
 
-                <div className="flex justify-between items-center pt-3 border-t border-gray-200/50">
+                <div className="flex justify-between items-center pt-3 border-t border-slate-100">
                     <div className="flex flex-col">
-                        <span className="font-medium">Recomendação:</span>
+                        <span className="font-medium text-slate-700">Recomendação:</span>
                         {['FII', 'Ações BR'].includes(recommendation.category) && recommendation.price && (
-                            <span className="text-sm text-gray-500 mt-1">
+                            <span className="text-sm text-slate-500 mt-1">
                                 {formatShares(recommendation.value, recommendation.price)}
                             </span>
                         )}
                     </div>
-                    <span className="text-lg font-semibold">
+                    <span className="text-lg font-medium text-slate-800">
                         {formatMoney(recommendation.value)}
-                        <span className="text-sm font-normal text-gray-600 ml-1">
+                        <span className="text-sm font-normal text-slate-500 ml-1">
                             ({recommendation.percentage.toFixed(1)}%)
                         </span>
                     </span>
@@ -180,7 +194,7 @@ const Recommendations: React.FC<RecommendationsProps> = ({
     return (
         <div className="mt-8 space-y-6">
             <div className="flex flex-col space-y-2">
-                <h3 className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-600 bg-clip-text text-transparent">
+                <h3 className="text-2xl font-semibold text-slate-800">
                     Estratégia de Investimento
                 </h3>
                 <p className="text-slate-600">
