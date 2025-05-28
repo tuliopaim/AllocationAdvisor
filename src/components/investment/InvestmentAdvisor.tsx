@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { Card, CardContent, CardHeader } from '../ui/card';
 import Papa from 'papaparse';
-import { groupBy, sumBy, orderBy, flatten } from 'lodash';
+import { groupBy, sumBy } from 'lodash';
 import { Download } from 'lucide-react';
 import { NumericFormat } from 'react-number-format';
-import PortfolioSummary from './PortfolioSummary';
 import Recommendations from './Recommendations';
 import TargetAllocations from './TargetAllocations';
 import PortfolioTable from './PortfolioTable';
@@ -315,7 +314,7 @@ const InvestmentAdvisor: React.FC = () => {
         amount: number,
         summary: PortfolioSummaryType
     ): void => {
-        const { currentTotal, futureTotal } = calculatePortfolioTotals(summary, amount);
+        const { futureTotal } = calculatePortfolioTotals(summary, amount);
         const { deficits, totalDeficit } = calculateCategoryDeficits(
             targetAllocations,
             futureTotal,
@@ -411,7 +410,7 @@ const InvestmentAdvisor: React.FC = () => {
                                                         file:rounded-md file:border-0
                                                         file:text-sm file:font-semibold
                                                         file:bg-slate-50 file:text-slate-700
-                                                        hover:file:bg-slate-100
+                                                        hover:file:bg-slate-10
                                                         cursor-pointer border border-slate-200 rounded-md
                                                         focus:outline-none focus:border-slate-300
                                                         transition-colors"
@@ -439,10 +438,6 @@ const InvestmentAdvisor: React.FC = () => {
                                             <PortfolioTable portfolioData={portfolioData} formatMoney={formatMoney} />
                                         )}
                                     </div>
-                                )}
-
-                                {portfolioSummary && (
-                                    <PortfolioSummary portfolioSummary={portfolioSummary} formatMoney={formatMoney} />
                                 )}
 
                                 <TargetAllocations

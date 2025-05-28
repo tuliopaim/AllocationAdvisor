@@ -35,11 +35,6 @@ export interface PortfolioTableProps {
     formatMoney: (value: number) => string;
 }
 
-export interface PortfolioSummaryProps {
-    portfolioSummary: PortfolioSummary;
-    formatMoney: (value: number) => string;
-}
-
 export interface RecommendationsProps {
     recommendations: Recommendation[];
     formatMoney: (value: number) => string;
