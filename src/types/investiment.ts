@@ -1,9 +1,9 @@
 export interface PortfolioItem {
-    Categoria: string;
-    Nota: number;
-    Investimento: string;
-    Cotacao: number;
-    'Total em Reais': number;
+    category: string;
+    score: number;
+    investment: string;
+    price: number;
+    totalAmount: number;
 }
 
 export interface CategorySummary {
@@ -20,14 +20,14 @@ export interface TargetAllocations {
 }
 
 export interface Recommendation {
-    categoria: string;
-    ativo: string;
-    nota: number;
-    alocacaoAtual: number;
-    alocacaoMeta: number;
-    valor: number;
-    percentual: number;
-    cotacao?: number;
+    category: string;
+    asset: string;
+    score: number;
+    currentAllocation: number;
+    targetAllocation: number;
+    value: number;
+    percentage: number;
+    price?: number;
 }
 
 export interface PortfolioTableProps {

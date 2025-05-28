@@ -1,5 +1,10 @@
 import React from 'react';
-import type { PortfolioTableProps } from '../../types/investiment';
+import type { PortfolioItem } from '../../types/investiment';
+
+interface PortfolioTableProps {
+    portfolioData: PortfolioItem[];
+    formatMoney: (value: number) => string;
+}
 
 interface TableHeaderProps {
     columns: string[];
@@ -11,8 +16,7 @@ const TableHeader: React.FC<TableHeaderProps> = ({ columns }) => (
             {columns.map((column, index) => (
                 <th
                     key={index}
-                    className={`px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider ${index === columns.length - 1 ? 'text-right' : ''
-                        }`}
+                    className={`px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider ${index === columns.length - 1 ? 'text-right' : ''}`}
                 >
                     {column}
                 </th>
@@ -22,26 +26,26 @@ const TableHeader: React.FC<TableHeaderProps> = ({ columns }) => (
 );
 
 interface TableRowProps {
-    item: any;
+    item: PortfolioItem;
     formatMoney: (value: number) => string;
 }
 
 const TableRow: React.FC<TableRowProps> = ({ item, formatMoney }) => (
     <tr className="hover:bg-slate-50 transition-colors">
         <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">
-            {item.Categoria}
+            {item.category}
         </td>
         <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">
-            {item.Investimento}
+            {item.investment}
         </td>
         <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">
-            {item.Nota}
+            {item.score}
         </td>
         <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">
-            {item.Cotacao}
+            {item.price > 0 ? formatMoney(item.price) : '-'}
         </td>
         <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900 text-right">
-            {formatMoney(item['Total em Reais'])}
+            {formatMoney(item.totalAmount)}
         </td>
     </tr>
 );
@@ -52,13 +56,11 @@ const PortfolioTable: React.FC<PortfolioTableProps> = ({ portfolioData, formatMo
         'Investimento',
         'Nota',
         'Cotação',
-        'Total em Reais'
+        'Total'
     ];
 
     return (
         <div className="mt-8 space-y-6">
-            <h3 className="text-xl font-semibold">Detalhes do Portfolio</h3>
-
             <div className="border border-slate-200 rounded-lg overflow-hidden shadow-sm">
                 <div className="max-h-[60vh] overflow-y-auto">
                     <table className="min-w-full divide-y divide-slate-200">

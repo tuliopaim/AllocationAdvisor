@@ -8,7 +8,12 @@ interface SummaryCardProps {
     className?: string;
 }
 
-const SummaryCard: React.FC<SummaryCardProps> = ({ title, value, formatMoney, className = '' }) => (
+const SummaryCard: React.FC<SummaryCardProps> = ({
+    title,
+    value,
+    formatMoney,
+    className = ''
+}) => (
     <div className={`flex flex-col p-6 bg-gradient-to-br from-slate-50 to-white rounded-lg border-2 border-slate-200 shadow-sm hover:shadow-md transition-all ${className}`}>
         <div className="flex justify-between items-center">
             <div>
@@ -28,7 +33,12 @@ interface CategoryCardProps {
     formatMoney: (value: number) => string;
 }
 
-const CategoryCard: React.FC<CategoryCardProps> = ({ category, total, allocation, formatMoney }) => (
+const CategoryCard: React.FC<CategoryCardProps> = ({
+    category,
+    total,
+    allocation,
+    formatMoney
+}) => (
     <div className="flex flex-col p-4 rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors duration-200">
         <div className="flex justify-between items-start mb-3">
             <span className="font-semibold text-slate-900">{category}</span>
@@ -42,7 +52,10 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category, total, allocation
     </div>
 );
 
-const PortfolioSummary: React.FC<PortfolioSummaryProps> = ({ portfolioSummary, formatMoney }) => {
+const PortfolioSummary: React.FC<PortfolioSummaryProps> = ({
+    portfolioSummary,
+    formatMoney
+}) => {
     const totalPortfolio = Object.values(portfolioSummary).reduce((acc, curr) => acc + curr.total, 0);
 
     return (

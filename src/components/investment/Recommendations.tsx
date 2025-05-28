@@ -59,16 +59,7 @@ interface CategoryCardProps {
     formatMoney: (value: number) => string;
 }
 
-const CategoryCard: React.FC<CategoryCardProps> = ({
-    category,
-    currentTotal,
-    newTotal,
-    currentAllocation,
-    newAllocation,
-    difference,
-    valueDifference,
-    formatMoney
-}) => {
+const CategoryCard: React.FC<CategoryCardProps> = ({ category, currentTotal, newTotal, currentAllocation, newAllocation, difference, valueDifference, formatMoney }) => {
     const getDifferenceColor = (diff: number) =>
         diff > 0 ? 'text-green-700 bg-green-50' :
             diff < 0 ? 'text-red-700 bg-red-50' :
@@ -115,11 +106,7 @@ interface RecommendationCardProps {
     formatShares: (value: number, price?: number) => string | null;
 }
 
-const RecommendationCard: React.FC<RecommendationCardProps> = ({
-    recommendation,
-    formatMoney,
-    formatShares
-}) => {
+const RecommendationCard: React.FC<RecommendationCardProps> = ({ recommendation, formatMoney, formatShares }) => {
     const categoryColors = {
         'ETF': 'bg-blue-50 border-blue-200 hover:bg-blue-100',
         'Ações BR': 'bg-green-50 border-green-200 hover:bg-green-100',
@@ -128,27 +115,27 @@ const RecommendationCard: React.FC<RecommendationCardProps> = ({
         'Cripto': 'bg-red-50 border-red-200 hover:bg-red-100'
     };
 
-    const colorClass = categoryColors[recommendation.categoria as keyof typeof categoryColors] || 'bg-gray-50 border-gray-200 hover:bg-gray-100';
+    const colorClass = categoryColors[recommendation.category as keyof typeof categoryColors] || 'bg-gray-50 border-gray-200 hover:bg-gray-100';
 
     return (
         <div className={`p-4 rounded-lg border ${colorClass} transition-colors duration-200`}>
             <div className="flex flex-col space-y-3">
                 <div className="flex justify-between items-start">
-                    <span className="font-semibold text-lg">{recommendation.ativo}</span>
+                    <span className="font-semibold text-lg">{recommendation.asset}</span>
                     <span className="text-sm font-medium px-2 py-1 rounded bg-white/50">
-                        {recommendation.categoria}
+                        {recommendation.category}
                     </span>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4 text-sm">
                     <div>
                         <span className="text-gray-600">Nota:</span>{' '}
-                        <span className="font-medium">{recommendation.nota}</span>
+                        <span className="font-medium">{recommendation.score}</span>
                     </div>
                     <div>
                         <span className="text-gray-600">Alocação:</span>{' '}
                         <span className="font-medium">
-                            {recommendation.alocacaoAtual.toFixed(1)}% → {recommendation.alocacaoMeta.toFixed(1)}%
+                            {recommendation.currentAllocation.toFixed(1)}% → {recommendation.targetAllocation.toFixed(1)}%
                         </span>
                     </div>
                 </div>
@@ -156,16 +143,16 @@ const RecommendationCard: React.FC<RecommendationCardProps> = ({
                 <div className="flex justify-between items-center pt-3 border-t border-gray-200/50">
                     <div className="flex flex-col">
                         <span className="font-medium">Recomendação:</span>
-                        {['FII', 'Ações BR'].includes(recommendation.categoria) && recommendation.cotacao && (
+                        {['FII', 'Ações BR'].includes(recommendation.category) && recommendation.price && (
                             <span className="text-sm text-gray-500 mt-1">
-                                {formatShares(recommendation.valor, recommendation.cotacao)}
+                                {formatShares(recommendation.value, recommendation.price)}
                             </span>
                         )}
                     </div>
                     <span className="text-lg font-semibold">
-                        {formatMoney(recommendation.valor)}
+                        {formatMoney(recommendation.value)}
                         <span className="text-sm font-normal text-gray-600 ml-1">
-                            ({recommendation.percentual.toFixed(1)}%)
+                            ({recommendation.percentage.toFixed(1)}%)
                         </span>
                     </span>
                 </div>
@@ -180,70 +167,76 @@ const Recommendations: React.FC<RecommendationsProps> = ({
     portfolioSummary,
     investmentAmount
 }) => {
+    const validRecommendations = recommendations.filter(r => r.value > 0);
     const portfolioTotalCurrent = sumBy(Object.values(portfolioSummary), 'total');
     const portfolioTotalAfter = portfolioTotalCurrent + investmentAmount;
 
-    const formatShares = (valor: number, cotacao?: number) => {
-        if (!cotacao || cotacao <= 0) return null;
-        const shares = Math.floor(valor / cotacao);
+    const formatShares = (value: number, price?: number): string | null => {
+        if (!price || price <= 0) return null;
+        const shares = Math.floor(value / price);
         return `${shares} cota${shares !== 1 ? 's' : ''}`;
     };
 
     return (
         <div className="mt-8 space-y-6">
-            <h3 className="text-xl font-semibold">Recomendações de Aporte</h3>
-
-            <div className="p-4 bg-white border border-slate-200 rounded-lg shadow-sm">
-                <div className="space-y-6">
-                    <PortfolioSummaryCard
-                        currentTotal={portfolioTotalCurrent}
-                        afterTotal={portfolioTotalAfter}
-                        investmentAmount={investmentAmount}
-                        formatMoney={formatMoney}
-                    />
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {Object.entries(portfolioSummary)
-                            .sort(([, a], [, b]) => b.total - a.total)
-                            .map(([category, data]) => {
-                                const currentTotal = data.total;
-                                const categoryRecs = recommendations.filter(r => r.categoria === category);
-                                const aporteCategoria = sumBy(categoryRecs, 'valor');
-                                const novoTotal = currentTotal + aporteCategoria;
-                                const portfolioTotalAtual = sumBy(Object.values(portfolioSummary), 'total');
-                                const novoPortfolioTotal = portfolioTotalAtual + investmentAmount;
-                                const novaAlocacao = (novoTotal / novoPortfolioTotal) * 100;
-                                const alocacaoAtual = data.allocation;
-                                const diferencaPercentual = novaAlocacao - alocacaoAtual;
-                                const diferencaValor = novoTotal - currentTotal;
-
-                                return (
-                                    <CategoryCard
-                                        key={category}
-                                        category={category}
-                                        currentTotal={currentTotal}
-                                        newTotal={novoTotal}
-                                        currentAllocation={alocacaoAtual}
-                                        newAllocation={novaAlocacao}
-                                        difference={diferencaPercentual}
-                                        valueDifference={diferencaValor}
-                                        formatMoney={formatMoney}
-                                    />
-                                );
-                            })}
-                    </div>
-                </div>
+            <div className="flex flex-col space-y-2">
+                <h3 className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-600 bg-clip-text text-transparent">
+                    Estratégia de Investimento
+                </h3>
+                <p className="text-slate-600">
+                    Recomendações personalizadas para otimizar seu portfólio
+                </p>
             </div>
 
-            <div className="space-y-2 max-h-[75vh] overflow-y-auto pr-4">
-                {recommendations.map((rec, index) => (
-                    <RecommendationCard
-                        key={index}
-                        recommendation={rec}
-                        formatMoney={formatMoney}
-                        formatShares={formatShares}
-                    />
-                ))}
+            <div className="space-y-6">
+                <PortfolioSummaryCard
+                    currentTotal={portfolioTotalCurrent}
+                    afterTotal={portfolioTotalAfter}
+                    investmentAmount={investmentAmount}
+                    formatMoney={formatMoney}
+                />
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {Object.entries(portfolioSummary)
+                        .sort(([, a], [, b]) => b.total - a.total)
+                        .map(([category, data]) => {
+                            const currentTotal = data.total;
+                            const categoryRecs = validRecommendations.filter(r => r.category === category);
+                            const aporteCategoria = sumBy(categoryRecs, 'value');
+                            const novoTotal = currentTotal + aporteCategoria;
+                            const portfolioTotalAtual = sumBy(Object.values(portfolioSummary), 'total');
+                            const novoPortfolioTotal = portfolioTotalAtual + investmentAmount;
+                            const novaAlocacao = (novoTotal / novoPortfolioTotal) * 100;
+                            const alocacaoAtual = data.allocation;
+                            const diferencaPercentual = novaAlocacao - alocacaoAtual;
+                            const diferencaValor = novoTotal - currentTotal;
+
+                            return (
+                                <CategoryCard
+                                    key={category}
+                                    category={category}
+                                    currentTotal={currentTotal}
+                                    newTotal={novoTotal}
+                                    currentAllocation={alocacaoAtual}
+                                    newAllocation={novaAlocacao}
+                                    difference={diferencaPercentual}
+                                    valueDifference={diferencaValor}
+                                    formatMoney={formatMoney}
+                                />
+                            );
+                        })}
+                </div>
+
+                <div className="space-y-2 max-h-[75vh] overflow-y-auto pr-4">
+                    {validRecommendations.map((recommendation, index) => (
+                        <RecommendationCard
+                            key={index}
+                            recommendation={recommendation}
+                            formatMoney={formatMoney}
+                            formatShares={formatShares}
+                        />
+                    ))}
+                </div>
             </div>
         </div>
     );
