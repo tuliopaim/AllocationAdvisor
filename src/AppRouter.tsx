@@ -4,7 +4,7 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 // Import the component you want to render for a specific route
-import InvestmentAdvisor from './components/investment/InvestmentAdvisor';
+import AllocationAdvisor from './components/investment/AllocationAdvisor';
 
 const AppRouter: React.FC = () => {
   return (
@@ -18,7 +18,7 @@ const AppRouter: React.FC = () => {
           - path: The URL path for this route. "/" is the root path.
           - element: The React component to render when the path matches.
         */}
-        <Route path="/" element={<InvestmentAdvisor />} />
+        <Route path="/" element={<AllocationAdvisor />} />
 
         {/*
           Add more <Route> elements here if your Next.js app had other "pages"

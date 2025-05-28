@@ -23,7 +23,7 @@ interface RawPortfolioItem {
     [key: string]: string;
 }
 
-const InvestmentAdvisor: React.FC = () => {
+const ConsultorAportes: React.FC = () => {
     const [portfolioData, setPortfolioData] = useState<PortfolioItem[] | null>(null);
     const [showPortfolioTable, setShowPortfolioTable] = useState(true);
     const [targetAllocations, setTargetAllocations] = useState<TargetAllocationsType>({
@@ -366,12 +366,13 @@ const InvestmentAdvisor: React.FC = () => {
     return (
         <div className="min-h-screen bg-slate-50">
             <div className="container mx-auto px-4 py-8 max-w-5xl">
-                <div className="flex flex-col space-y-2 mb-8">
-                    <h1 className="text-3xl font-bold bg-gradient-to-r from-slate-900 to-slate-600 bg-clip-text text-transparent">
-                        Meu Consultor de Investimentos
+                <div className="flex flex-col space-y-2 mb-6 px-2">
+                    <h1 className="text-3xl font-bold bg-gradient-to-r from-slate-900 to-slate-600 bg-clip-text text-transparent flex items-center gap-3">
+                        <img src="/wallet.svg" alt="Wallet" className="w-8 h-8" />
+                        Consultor de Aportes
                     </h1>
                     <p className="text-slate-600">
-                        Análise inteligente e recomendações personalizadas para seu portfólio
+                        Divisão de Aportes com base em alocações alvo e notas dos ativos
                     </p>
                 </div>
 
@@ -500,4 +501,4 @@ const InvestmentAdvisor: React.FC = () => {
     );
 };
 
-export default InvestmentAdvisor;
+export default ConsultorAportes;
